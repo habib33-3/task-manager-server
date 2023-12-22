@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import "dotenv/config";
 
 const app = express();
@@ -47,6 +47,23 @@ async function run() {
 
       const query = { status: status, userEmail: email };
       const result = await taskCollection.find(query).toArray();
+
+      res.send(result);
+    });
+
+    app.put("/api/v1/task/updateStatus/:id", async (req, res) => {
+      const status = req.body;
+      const id = req.params.id;
+
+      const filter = { _id: new ObjectId(id) };
+
+      const updatedStatus = {
+        $set: {
+          status: status.status,
+        },
+      };
+
+      const result = await taskCollection.updateOne(filter, updatedStatus);
 
       res.send(result);
     });
