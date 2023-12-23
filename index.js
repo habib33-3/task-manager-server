@@ -68,6 +68,36 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/api/v1/task/updateTask/:id", async (req, res) => {
+      const task = req.body;
+      const id = req.params.id;
+
+      const filter = { _id: new ObjectId(id) };
+
+      const updatedTask = {
+        $set: {
+          title: task.title,
+          description: task.description,
+          deadline: task.deadline,
+          priority: task.priority,
+        },
+      };
+
+      const result = await taskCollection.updateOne(filter, updatedTask);
+
+      res.send(result);
+    });
+
+    app.get("/api/v1/task/:id", async (req, res) => {
+      const id = req.params.id;
+
+      const query = { _id: new ObjectId(id) };
+
+      const result = await taskCollection.findOne(query);
+
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
