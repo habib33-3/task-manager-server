@@ -42,10 +42,10 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/api/v1/tasks/:email/:status", async (req, res) => {
-      const { status, email } = req.params;
+    app.get("/api/v1/tasks/:email", async (req, res) => {
+      const { email } = req.params;
 
-      const query = { status: status, userEmail: email };
+      const query = { userEmail: email };
       const result = await taskCollection.find(query).toArray();
 
       res.send(result);
